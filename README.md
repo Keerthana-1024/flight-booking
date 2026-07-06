@@ -6,46 +6,7 @@ A full-stack flight booking application built with **Java 17 + Spring Boot 3** (
 
 ## Architecture
 
-![System Architecture](docs/architecture.png)
-
-```
-┌─────────────────────────────────────────────────────────────────────────┐
-│                          CLIENT (Browser)                               │
-│                     React 18 SPA  ·  Vite  ·  Stripe.js                │
-└───────────────────────────┬─────────────────────────────────────────────┘
-                            │  HTTP / REST  (JSON)
-                            ▼
-┌─────────────────────────────────────────────────────────────────────────┐
-│                    SPRING BOOT 3  ·  Java 17                            │
-│                                                                         │
-│  ┌─────────────────┐  ┌─────────────────┐  ┌──────────────────────┐    │
-│  │  AuthController  │  │ FlightController │  │  PaymentController   │    │
-│  │   (JWT / BCrypt) │  │  (Seats / Lock)  │  │  (Stripe Card / UPI) │    │
-│  └────────┬─────────┘  └────────┬─────────┘  └──────────┬───────────┘    │
-│           │                    │                        │                │
-│  ┌────────▼────────────────────▼────────────────────────▼───────────┐   │
-│  │                        Service Layer                              │   │
-│  │  FlightService  ·  SeatLockService  ·  StripeService              │   │
-│  └───────────────────────┬────────────────────────┬──────────────────┘   │
-│                          │  JPA / Hibernate        │  Lettuce (TLS)      │
-│  ┌────────────────────────▼──────────┐  ┌──────────▼────────────────┐   │
-│  │   Spring Data JPA   (Hibernate)   │  │   Spring Data Redis        │   │
-│  └────────────────────────┬──────────┘  └──────────┬────────────────┘   │
-└───────────────────────────┼──────────────────────────┼────────────────────┘
-                            │  JDBC / SSL              │  rediss:// TLS
-                            ▼                          ▼
-                 ┌─────────────────┐        ┌──────────────────┐
-                 │  Supabase       │        │  Upstash Redis   │
-                 │  PostgreSQL     │        │  (Seat Locks)    │
-                 └─────────────────┘        └──────────────────┘
-
-                             External APIs
-                 ┌──────────────────────────────────────┐
-                 │  Stripe API  ·  Amadeus Flight API    │
-                 └──────────────────────────────────────┘
-```
-
----
+![System Architecture](architecture.png)
 
 ## Tech Stack
 
@@ -64,14 +25,14 @@ A full-stack flight booking application built with **Java 17 + Spring Boot 3** (
 
 ## Features
 
-- 🔐 **JWT Auth** — Register / Login with BCrypt password hashing
-- ✈️ **Flight Search** — Multi-date range, sortable by price/duration/layovers
-- 💺 **Live Seat Map** — Real-time Redis-backed seat locking with 3-minute countdown
-- 👑 **My Seats** — Gold-pulsing indicators for your own booked seats
-- 💳 **Stripe Payments** — Card (with 3D Secure) and UPI NetBanking
-- 💾 **Saved Methods** — Save and reuse cards and UPI IDs
-- 🧾 **Booking History** — Full trip details, cost, timestamps, per-seat cancellation status
-- ❌ **Partial Cancellation** — Cancel individual seats on a booking; seat becomes available to others instantly
+- **JWT Auth** — Register / Login with BCrypt password hashing
+- **Flight Search** — Multi-date range, sortable by price/duration/layovers
+- **Live Seat Map** — Real-time Redis-backed seat locking with 3-minute countdown
+- **My Seats** — Gold-pulsing indicators for your own booked seats
+- **Stripe Payments** — Card (with 3D Secure) and UPI NetBanking
+- **Saved Methods** — Save and reuse cards and UPI IDs
+- **Booking History** — Full trip details, cost, timestamps, per-seat cancellation status
+- **Partial Cancellation** — Cancel individual seats on a booking; seat becomes available to others instantly
 
 ---
 
@@ -232,17 +193,3 @@ Since this app uses Stripe **Test Mode**, use these test card numbers:
 > Use any future expiry (e.g. `12/30`), any CVC (`123`), any ZIP (`12345`).
 
 ---
-
-## Deployment on Render
-
-1. Create a new **Web Service** on [render.com](https://render.com)
-2. Point it to this GitHub repo
-3. Set **Build Command:** `mvn clean package -DskipTests`
-4. Set **Start Command:** `java -jar target/flights-1.0.0.jar`
-5. Add all `.env` variables in Render's **Environment** settings (no `.env` file needed on Render)
-
----
-
-## License
-
-MIT
