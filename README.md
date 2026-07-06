@@ -6,7 +6,7 @@ A full-stack flight booking application built with **Java 17 + Spring Boot 3** (
 
 ## Architecture
 
-![System Architecture](architecture.png)
+![System Architecture](architecture)
 
 ## Tech Stack
 
