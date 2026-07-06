@@ -19,7 +19,60 @@ A full-stack flight booking application built with **Java 17 + Spring Boot 3** (
 | Payments | Stripe (Card, UPI, Payment Intents) |
 | Auth | JWT (JJWT 0.11), BCrypt |
 | Flights | Mock engine (deterministic seeded RNG) + Amadeus Java SDK |
-| Deployment | Render (backend), bundled React served as static files |
+| Deployment | Render (Docker), multi-stage builds |
+
+---
+
+## Deployment on Render (Docker)
+
+This project ships with a **multi-stage `Dockerfile`** that:
+1. Builds the React frontend (Node 20 Alpine)
+2. Bundles the React output into Spring Boot's static resources
+3. Builds the Spring Boot fat JAR (Maven + Temurin 17)
+4. Produces a lean JRE-only Alpine runtime image
+
+### Steps
+
+1. **Create a new Web Service** on [render.com](https://render.com)
+2. Connect your GitHub repo
+3. Set **Environment** → `Docker`
+4. Set **Dockerfile Path** → `./Dockerfile`
+5. Add the following **Environment Variables** in Render's dashboard:
+
+```
+SUPABASE_CONNECTION_STRING   jdbc:postgresql://<host>:5432/postgres?user=...&password=...
+UPSTASH_REDIS_URL            rediss://default:<token>@<host>.upstash.io:6379
+STRIPE_SECRET_KEY            sk_test_...
+STRIPE_PUBLISHABLE_KEY       pk_test_...
+STRIPE_WEBHOOK_SECRET        whsec_...
+JWT_SECRET                   <at least 32 random characters>
+AMADEUS_API_KEY              (optional)
+AMADEUS_API_SECRET           (optional)
+```
+
+> Render automatically injects a `PORT` environment variable. Spring Boot reads it via `server.port=${PORT:8080}` in `application.properties`.
+
+6. Click **Deploy** — Render will build the Docker image and serve the app.
+
+### Local Docker Test (optional)
+
+```bash
+cd flights/
+
+# Build the image locally
+docker build -t skybook .
+
+# Run with your env vars
+docker run -p 8080:8080 \
+  -e SUPABASE_CONNECTION_STRING="jdbc:postgresql://..." \
+  -e UPSTASH_REDIS_URL="rediss://..." \
+  -e STRIPE_SECRET_KEY="sk_test_..." \
+  -e STRIPE_PUBLISHABLE_KEY="pk_test_..." \
+  -e JWT_SECRET="your_secret_here" \
+  skybook
+
+# Open http://localhost:8080
+```
 
 ---
 
