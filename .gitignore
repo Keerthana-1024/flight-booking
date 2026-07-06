@@ -1,0 +1,46 @@
+# ─── Environment & Secrets ────────────────────────────────────────────
+.env
+.env.local
+.env.*.local
+
+# ─── Maven ────────────────────────────────────────────────────────────
+target/
+!.mvn/wrapper/maven-wrapper.jar
+!**/src/main/**/target/
+!**/src/test/**/target/
+*.jar
+*.war
+*.class
+
+# ─── Spring Boot ──────────────────────────────────────────────────────
+spring-shell.log
+
+# ─── IDE / Editor ─────────────────────────────────────────────────────
+.idea/
+*.iml
+*.ipr
+*.iws
+.vscode/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+
+# ─── Node / React (ui folder) ─────────────────────────────────────────
+ui/node_modules/
+ui/dist/
+ui/.vite/
+ui/.cache/
+node_modules/
+dist/
+.cache/
+
+# ─── OS ───────────────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ─── Logs ─────────────────────────────────────────────────────────────
+*.log
+logs/
